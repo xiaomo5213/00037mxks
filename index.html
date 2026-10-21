@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>00037《美学》· 全书笔记闪卡</title>
+<meta name="description" content="自考 00037《美学》2604 全书笔记闪卡：445 张卡片、2345 个填空，按章 / 节组织，点击填空逐条揭示，自动记录复习进度。纯静态网页，可离线使用。">
+<meta name="theme-color" content="#f6f3ec">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+<script>
+  // 先定主题，避免闪白
+  (function () {
+    try {
+      var raw = localStorage.getItem("meixue-00037-v1");
+      var saved = raw ? JSON.parse(raw) : null;
+      var t = saved && saved.prefs && saved.prefs.theme;
+      var q = (location.search.match(/[?&]theme=(light|dark)/) || [])[1];
+      if (q) t = q;
+      if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", t);
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", t === "dark" ? "#161512" : "#f6f3ec");
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  })();
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="seal" aria-hidden="true">美</span>
+    <div class="brand-text">
+      <h1>00037《美学》</h1>
+      <p id="brandSub">2604 全书笔记 · 445 张</p>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <span class="counter" id="counter" aria-live="polite">0 / 0</span>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="切换深色模式" title="切换深色模式">
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.3A8.6 8.6 0 1 1 9.7 3.5a7 7 0 0 0 10.8 10.8Z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.4 4.4l1.6 1.6M18 18l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.4 19.6 6 18M18 6l1.6-1.6"/></svg>
+    </button>
+    <button class="icon-btn" id="menuBtn" type="button" aria-label="打开目录" aria-expanded="false" aria-controls="drawer" title="目录（/）">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h11"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="progress" aria-hidden="true"><i id="progressFill"></i></div>
+
+<main class="stage" id="stage">
+  <section class="study" id="study">
+    <div class="crumbs" id="crumbs"></div>
+
+    <article class="card" id="card" aria-live="polite">
+      <div class="card-body" id="cardBody"></div>
+    </article>
+
+    <div class="actions">
+      <button class="btn primary" id="revealBtn" type="button">
+        显示答案 <kbd>空格</kbd>
+      </button>
+      <div class="grades" id="grades" hidden>
+        <button class="btn ghost" data-g="again" type="button">忘记 <kbd>1</kbd></button>
+        <button class="btn ghost" data-g="hard" type="button">模糊 <kbd>2</kbd></button>
+        <button class="btn primary" data-g="good" type="button">记住 <kbd>3</kbd></button>
+      </div>
+    </div>
+
+    <p class="hint" id="hint">点击文中空位可单独揭示；<kbd>空格</kbd> 看整张答案。</p>
+  </section>
+
+  <section class="done" id="done" hidden>
+    <div class="done-mark" aria-hidden="true">✓</div>
+    <h2 id="doneTitle">这一轮学完了</h2>
+    <p id="doneText" class="done-text"></p>
+    <div class="done-actions">
+      <button class="btn primary" id="againBtn" type="button">再来一轮</button>
+      <button class="btn ghost" id="openMenuBtn" type="button">看看目录</button>
+    </div>
+  </section>
+</main>
+
+<div class="mask" id="mask" hidden></div>
+
+<aside class="drawer" id="drawer" aria-label="目录" aria-hidden="true">
+  <div class="drawer-head">
+    <h2>目录</h2>
+    <button class="icon-btn" id="closeMenuBtn" type="button" aria-label="关闭目录" title="关闭（Esc）">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+
+  <div class="drawer-scroll">
+    <div class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.4"/><path d="m16 16 4.2 4.2"/></svg>
+      <input id="searchInput" type="search" placeholder="搜索章节、考点或正文…" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="quick" id="quick">
+      <button class="quick-row" data-scope="today" type="button">
+        <span>今日复习</span><span class="quick-n" id="dueCount">0</span>
+      </button>
+      <button class="quick-row" data-scope="all" type="button">
+        <span>全部卡片</span><span class="quick-n" id="allCount">0</span>
+      </button>
+    </div>
+
+    <div class="toc" id="toc"></div>
+    <div class="results" id="results" hidden></div>
+
+    <div class="drawer-foot">
+      <div class="foot-row">
+        <span class="foot-label">顺序</span>
+        <div class="seg" id="orderSeg" role="group" aria-label="出卡顺序">
+          <button type="button" data-order="seq" class="is-on">按章节</button>
+          <button type="button" data-order="shuffle">随机</button>
+        </div>
+      </div>
+      <div class="foot-stats" id="footStats"></div>
+      <button class="link-btn" id="resetBtn" type="button">清空本机进度</button>
+      <p class="foot-note">卡片整理自 Anki 牌组《00037《美学》2604全书笔记》，纯静态页面，进度只保存在这台设备的浏览器里。</p>
+    </div>
+  </div>
+</aside>
+
+<script src="data/cards.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
